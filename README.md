@@ -12,3 +12,9 @@ mvn clean test -P chrome
 mvn clean test -P firefox
 mvn clean test -P edge
 ```
+
+### Technical stack
+
+* JUnit 5
+* Selenium
+* Selenide
