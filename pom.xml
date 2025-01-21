@@ -19,6 +19,7 @@
     <cucumber.version>7.20.1</cucumber.version>
     <lombok.version>1.18.36</lombok.version>
     <logback.version>1.5.16</logback.version>
+    <allure.version>2.29.1</allure.version>
   </properties>
 
   <dependencyManagement>
@@ -34,6 +35,13 @@
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>${junit-5.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-bom</artifactId>
+        <version>${allure.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -89,6 +97,22 @@
       <version>${logback.version}</version>
     </dependency>
 
+    <!--Allure-->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-cucumber7-jvm</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-selenide</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit-platform</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

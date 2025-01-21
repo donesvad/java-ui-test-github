@@ -7,12 +7,13 @@ import static com.codeborne.selenide.Selenide.$$;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
-public class SearchResultsPage {
+public class SearchResultsPage extends BasePage {
   private final SelenideElement searchResultPageContainer = $(".search-results-page");
   private final ElementsCollection searchResultElements = $$("[data-testid='results-list'] > div");
   private final ElementsCollection searchTitleElements = $$(".search-title");
 
-  public void shouldBeVisible() {
+  @Override
+  public void isLoaded() {
     searchResultPageContainer.shouldBe(visible);
   }
 

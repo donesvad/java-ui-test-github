@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ConfigProperty {
   BASE_URL("base.url"),
-  BROWSER("browser");
+  BROWSER("browser"),
+  HEADLESS("headless"),
+  USERNAME("test.username"),
+  PASSWORD("test.password");
 
   private final String value;
 }

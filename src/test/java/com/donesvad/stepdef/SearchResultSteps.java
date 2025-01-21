@@ -6,14 +6,9 @@ import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import com.donesvad.page.SearchResultsPage;
 import io.cucumber.java.en.Then;
 
-public class SearchResultSteps {
+public class SearchResultSteps extends BaseSteps {
 
   private final SearchResultsPage searchResultsPage = new SearchResultsPage();
-
-  @Then("user is on search results page")
-  public void userIsOnSearchResultsPage() {
-    searchResultsPage.shouldBeVisible();
-  }
 
   @Then("there is at least {int} result")
   public void resultsPageHasAtLeastResult(int expectedMinimumSize) {

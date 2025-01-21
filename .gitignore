@@ -18,5 +18,6 @@ buildNumber.properties
 .classpath
 .idea/
 logs/
+allure-results/
 
 build/
