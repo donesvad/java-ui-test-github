@@ -116,61 +116,6 @@
 
   </dependencies>
 
-  <profiles>
-    <profile>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <selenide.browser>chrome</selenide.browser>
-                <selenide.headless>true</selenide.headless>
-              </systemPropertyVariables>
-            </configuration>
-            <groupId>org.apache.maven.plugins</groupId>
-          </plugin>
-        </plugins>
-      </build>
-      <id>chrome</id>
-    </profile>
-
-    <profile>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <selenide.browser>edge</selenide.browser>
-              </systemPropertyVariables>
-            </configuration>
-            <groupId>org.apache.maven.plugins</groupId>
-          </plugin>
-        </plugins>
-      </build>
-      <id>edge</id>
-    </profile>
-
-    <profile>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <selenide.browser>firefox</selenide.browser>
-                <selenide.headless>true</selenide.headless>
-              </systemPropertyVariables>
-            </configuration>
-            <groupId>org.apache.maven.plugins</groupId>
-          </plugin>
-        </plugins>
-      </build>
-      <id>firefox</id>
-    </profile>
-  </profiles>
-
   <build>
     <plugins>
       <plugin>
