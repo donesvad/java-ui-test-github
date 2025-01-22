@@ -19,12 +19,12 @@ jobs:
 
     services:
       selenium-hub:
-        image: selenium/hub:${{ env.SELENIUM_VERSION }}
+        image: selenium/hub:$SELENIUM_VERSION
         ports:
           - 4444:4444
         options: --network-alias=selenium-hub
       chrome:
-        image: selenium/node-chrome:${{ env.SELENIUM_VERSION }}
+        image: selenium/node-chrome:$SELENIUM_VERSION
         depends_on:
           - selenium-hub
         options: >
@@ -33,7 +33,7 @@ jobs:
           --env SE_EVENT_BUS_PUBLISH_PORT=4442
           --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       firefox:
-        image: selenium/node-firefox:${{ env.SELENIUM_VERSION }}
+        image: selenium/node-firefox:$SELENIUM_VERSION
         depends_on:
           - selenium-hub
         options: >
