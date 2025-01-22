@@ -1,0 +1,92 @@
+name: Run UI E2E test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+
+    env:
+      SELENIUM_VERSION: 4.28.0
+
+    services:
+      selenium-hub:
+        image: selenium/hub:${{ env.SELENIUM_VERSION }}
+        ports:
+          - 4444:4444
+        options: --network-alias=selenium-hub
+      chrome:
+        image: selenium/node-chrome:${{ env.SELENIUM_VERSION }}
+        depends_on:
+          - selenium-hub
+        options: >
+          --network-alias=chrome
+          --env SE_EVENT_BUS_HOST=selenium-hub
+          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      firefox:
+        image: selenium/node-firefox:${{ env.SELENIUM_VERSION }}
+        depends_on:
+          - selenium-hub
+        options: >
+          --network-alias=firefox
+          --env SE_EVENT_BUS_HOST=selenium-hub
+          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Dependencies
+        run: mvn install
+
+      - name: Run Selenium Tests
+        run: mvn test
+        env:
+          SELENIUM_HUB_URL: http://localhost:4444/wd/hub
+
+      - name: Load test report history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.9
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: ./allure-results
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history

@@ -9,6 +9,7 @@ public enum ConfigProperty {
   BASE_URL("base.url"),
   BROWSER("browser"),
   HEADLESS("headless"),
+  SELENIUM_HUB_URL("remote"),
   USERNAME("test.username"),
   PASSWORD("test.password");
 

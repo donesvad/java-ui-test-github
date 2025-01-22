@@ -1,0 +1,33 @@
+#For local usage of the Selenium Grid, you can use the docker-compose.yaml file to start the Selenium Grid.
+#To start the Selenium Grid, run the following command:
+#docker-compose up
+#To stop the Selenium Grid, run the following command:
+#docker-compose down
+
+#For CI/CD usage of the Selenium Grid, you can check Services in the GitHub Actions workflow file.
+
+version: "3"
+services:
+  selenium-hub:
+    image: selenium/hub:latest
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  chrome:
+    image: selenium/node-chromium:latest
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  firefox:
+    image: selenium/node-firefox:latest
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
