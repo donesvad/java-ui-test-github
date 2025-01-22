@@ -10,28 +10,25 @@ on:
 concurrency:
   group: ${{ github.workflow }}
 
-env:
-  SELENIUM_VERSION: 4.28.0
-
 jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
     services:
       selenium-hub:
-        image: selenium/hub:$SELENIUM_VERSION
+        image: selenium/hub:4.28.0
         ports:
           - 4444:4444
         options: --network-alias=selenium-hub
       chrome:
-        image: selenium/node-chrome:$SELENIUM_VERSION
+        image: selenium/node-chrome:4.28.0
         options: >
           --network-alias=chrome
           --env SE_EVENT_BUS_HOST=selenium-hub
           --env SE_EVENT_BUS_PUBLISH_PORT=4442
           --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       firefox:
-        image: selenium/node-firefox:$SELENIUM_VERSION
+        image: selenium/node-firefox:4.28.0
         options: >
           --network-alias=firefox
           --env SE_EVENT_BUS_HOST=selenium-hub
