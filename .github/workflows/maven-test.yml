@@ -14,13 +14,6 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
-
-#    services:
-#      selenium:
-#        image: selenium/standalone-chrome
-#        options: --shm-size=2gb
-
-
     services:
       selenium-hub:
         image: selenium/hub:4.28.0
@@ -42,14 +35,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Monitor Docker Resource Usage
-        run: docker stats --no-stream
-
       - name: Set Up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Dependencies
+        run: mvn install -DskipTests
 
       - name: Wait for Selenium Hub to be ready
         run: |
@@ -68,19 +69,6 @@ jobs:
             echo "Selenium Hub did not become ready in time."
             exit 1
           fi
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Install Dependencies
-        run: mvn install -DskipTests
-
-      #      - run: curl http://localhost:4444/status
 
       - name: Run Selenium Tests
         run: mvn test
