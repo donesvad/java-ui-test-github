@@ -1,0 +1,4 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Wed Jan 22 15:13:27 GMT 2025","Wed Jan 22 15:13:34 GMT 2025","7766","","Login","","User is able to sign in","","User is able to sign in",""
+"passed","Wed Jan 22 15:13:41 GMT 2025","Wed Jan 22 15:13:49 GMT 2025","7018","","Search","","User can search for a repository","","User can search for a repository",""
+"passed","Wed Jan 22 15:13:34 GMT 2025","Wed Jan 22 15:13:41 GMT 2025","7112","","Search","","User can search for a repository","","User can search for a repository",""
