@@ -26,7 +26,10 @@ jobs:
         image: selenium/hub:4.28.0
         ports:
           - 4444:4444
-        options: --network-alias=selenium-hub
+        options: >
+          --network-alias=selenium-hub
+          --env SE_SESSION_REQUEST_TIMEOUT=30000
+          --env SE_NODE_SESSION_TIMEOUT=30000
       chrome:
         image: selenium/node-chrome:4.28.0
         options: >
@@ -34,9 +37,13 @@ jobs:
           --env SE_EVENT_BUS_HOST=selenium-hub
           --env SE_EVENT_BUS_PUBLISH_PORT=4442
           --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+          --env SE_NODE_MAX_SESSIONS=1
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Monitor Docker Resource Usage
+        run: docker stats --no-stream
 
       - name: Set Up Java
         uses: actions/setup-java@v3
