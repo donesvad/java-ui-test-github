@@ -14,26 +14,33 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
+
     services:
-      selenium-hub:
-        image: selenium/hub:4.28.0
-        ports:
-          - 4444:4444
-        options: --network-alias=selenium-hub
-      chrome:
-        image: selenium/node-chrome:4.28.0
-        options: >
-          --network-alias=chrome
-          --env SE_EVENT_BUS_HOST=selenium-hub
-          --env SE_EVENT_BUS_PUBLISH_PORT=4442
-          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      firefox:
-        image: selenium/node-firefox:4.28.0
-        options: >
-          --network-alias=firefox
-          --env SE_EVENT_BUS_HOST=selenium-hub
-          --env SE_EVENT_BUS_PUBLISH_PORT=4442
-          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      selenium:
+        image: selenium/standalone=chrome
+        options: --shm-size=2gb
+
+
+    #    services:
+#      selenium-hub:
+#        image: selenium/hub:4.28.0
+#        ports:
+#          - 4444:4444
+#        options: --network-alias=selenium-hub
+#      chrome:
+#        image: selenium/node-chrome:4.28.0
+#        options: >
+#          --network-alias=chrome
+#          --env SE_EVENT_BUS_HOST=selenium-hub
+#          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+#          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#      firefox:
+#        image: selenium/node-firefox:4.28.0
+#        options: >
+#          --network-alias=firefox
+#          --env SE_EVENT_BUS_HOST=selenium-hub
+#          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+#          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 
     steps:
       - uses: actions/checkout@v4
