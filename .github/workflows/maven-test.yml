@@ -15,32 +15,25 @@ jobs:
     runs-on: ubuntu-latest
 
 
+#    services:
+#      selenium:
+#        image: selenium/standalone-chrome
+#        options: --shm-size=2gb
+
+
     services:
-      selenium:
-        image: selenium/standalone-chrome
-        options: --shm-size=2gb
-
-
-    #    services:
-#      selenium-hub:
-#        image: selenium/hub:4.28.0
-#        ports:
-#          - 4444:4444
-#        options: --network-alias=selenium-hub
-#      chrome:
-#        image: selenium/node-chrome:4.28.0
-#        options: >
-#          --network-alias=chrome
-#          --env SE_EVENT_BUS_HOST=selenium-hub
-#          --env SE_EVENT_BUS_PUBLISH_PORT=4442
-#          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-#      firefox:
-#        image: selenium/node-firefox:4.28.0
-#        options: >
-#          --network-alias=firefox
-#          --env SE_EVENT_BUS_HOST=selenium-hub
-#          --env SE_EVENT_BUS_PUBLISH_PORT=4442
-#          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      selenium-hub:
+        image: selenium/hub:4.28.0
+        ports:
+          - 4444:4444
+        options: --network-alias=selenium-hub
+      chrome:
+        image: selenium/node-chrome:4.28.0
+        options: >
+          --network-alias=chrome
+          --env SE_EVENT_BUS_HOST=selenium-hub
+          --env SE_EVENT_BUS_PUBLISH_PORT=4442
+          --env SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +43,24 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Wait for Selenium Hub to be ready
+        run: |
+          timeout=60
+          while [ $timeout -gt 0 ]; do
+            status=$(curl -s http://localhost:4444/status | jq -r '.value.ready')
+            if [ "$status" = "true" ]; then
+              echo "Selenium Hub is ready!"
+              break
+            fi
+            echo "Waiting for Selenium Hub to be ready..."
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+          if [ $timeout -le 0 ]; then
+            echo "Selenium Hub did not become ready in time."
+            exit 1
+          fi
 
       - name: Cache Maven dependencies
         uses: actions/cache@v4
@@ -62,7 +73,7 @@ jobs:
       - name: Install Dependencies
         run: mvn install -DskipTests
 
-#      - run: curl http://localhost:4444/status
+      #      - run: curl http://localhost:4444/status
 
       - name: Run Selenium Tests
         run: mvn test
