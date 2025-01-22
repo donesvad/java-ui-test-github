@@ -62,7 +62,7 @@ jobs:
       - name: Install Dependencies
         run: mvn install -DskipTests
 
-      - run: curl http://localhost:4444/status
+#      - run: curl http://localhost:4444/status
 
       - name: Run Selenium Tests
         run: mvn test
