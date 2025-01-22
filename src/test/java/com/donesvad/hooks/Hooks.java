@@ -20,11 +20,11 @@ public class Hooks {
   public static void setUp() {
     Configuration.browser = ConfigManager.get(BROWSER);
     Configuration.headless = Boolean.parseBoolean(ConfigManager.get(HEADLESS));
-    try {
-      Configuration.remote = ConfigManager.get(SELENIUM_HUB_URL);
-    } catch (Exception e) {
-      log.info("No remote URL is set, running tests locally");
-    }
+    String remoteUrl = System.getProperty(SELENIUM_HUB_URL.getValue());
+    if (remoteUrl != null) {
+      log.info("Remote URL is set to: {}", remoteUrl);
+      Configuration.remote = remoteUrl;
+    } else log.info("No remote URL is set, running tests locally");
     WebDriverRunner.addListener(new CustomWebDriverListener());
     SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
   }
