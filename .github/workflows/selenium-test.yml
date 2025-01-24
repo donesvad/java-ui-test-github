@@ -20,6 +20,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  DEFAULT_ENVIRONMENT: test
+
 concurrency:
   group: ${{ github.workflow }}
 
@@ -76,11 +79,21 @@ jobs:
             exit 1
           fi
 
+      - name: Determine environment
+        id: determine-environment
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            environment_lowercase=${{ env.DEFAULT_ENVIRONMENT }}
+          else
+            environment_lowercase=$(echo "${{ inputs.environment }}" | tr '[:upper:]' '[:lower:]')
+          fi
+          echo "environment=${environment_lowercase}" >> $GITHUB_ENV
+
+
       - name: Run Selenium Tests
         run: |
-          environment_lowercase=$(echo "${{inputs.environment}}" | tr '[:upper:]' '[:lower:]')
-          echo "Running tests in the ${environment_lowercase} environment"
-          mvn clean test -Denvironment=${environment_lowercase}
+          echo "Running tests in the ${environment} environment"
+          mvn clean test -Denvironment=${environment}
 
       - name: Load test report history
         uses: actions/checkout@v4
