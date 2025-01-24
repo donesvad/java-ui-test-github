@@ -77,7 +77,7 @@ jobs:
           fi
 
       - name: Run Selenium Tests
-        run: mvn clean test -Denvironment=${{ github.event.inputs.environment }}
+        run: mvn clean test -Denvironment=${{inputs.environment}}
 
       - name: Load test report history
         uses: actions/checkout@v4
