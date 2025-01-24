@@ -11,11 +11,20 @@ on:
         options:
           - test
           - tba
+      tags:
+        type: string
+        description: "Optional Cucumber tags to filter tests (e.g. '@smoke' or '@smoke or @regression'). Leave blank to run all tests."
+        required: false
+        default: ""
   workflow_call:
     inputs:
       environment:
         type: string
         default: 'test'
+        required: false
+      tags:
+        type: string
+        default: ""
         required: false
   push:
     branches: [ "main" ]
@@ -82,6 +91,7 @@ jobs:
       - name: Determine environment
         id: determine-environment
         run: |
+          # If triggered by push, we use the default environment, otherwise use the input
           if [ "${{ github.event_name }}" == "push" ]; then
             environment_lowercase=${{ env.DEFAULT_ENVIRONMENT }}
           else
@@ -89,11 +99,31 @@ jobs:
           fi
           echo "environment=${environment_lowercase}" >> $GITHUB_ENV
 
+      - name: Determine tags
+        id: determine-tags
+        run: |
+          # If triggered by push, we don't have tags input, so set to empty
+          if [ "${{ github.event_name }}" == "push" ]; then
+            tags_input=""
+          else
+            tags_input="${{ inputs.tags }}"
+          fi
+          echo "tags=${tags_input}" >> $GITHUB_ENV
 
       - name: Run Selenium Tests
         run: |
-          echo "Running tests in the ${environment} environment"
-          mvn clean test -Denvironment=${environment}
+          echo "Running tests in the '${{ env.environment }}' environment"
+          if [ -z "${{ env.tags }}" ]; then
+            # No tags specified, run all tests
+            mvn clean test \
+              -Denvironment=${{ env.environment }}
+          else
+            # Run only tests matching the tags
+            echo "Using tags: '${{ env.tags }}'"
+            mvn clean test \
+              -Denvironment=${{ env.environment }} \
+              -Dcucumber.filter.tags="${{ env.tags }}"
+          fi
 
       - name: Upload Logs
         if: always()
