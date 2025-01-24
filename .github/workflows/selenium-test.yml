@@ -17,6 +17,9 @@ on:
         type: string
         default: 'test'
         required: false
+  push:
+    branches: [ "main" ]
+
 concurrency:
   group: ${{ github.workflow }}
 
