@@ -2,11 +2,21 @@ name: Run UI E2E test
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    inputs:
+      environment:
+        type: choice
+        description: Environment
+        default: 'test'
+        required: true
+        options:
+          - test
+          - tba
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        default: 'test'
+        required: false
 concurrency:
   group: ${{ github.workflow }}
 
@@ -40,17 +50,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: maven
 
       - name: Install Dependencies
-        run: mvn install -DskipTests
+        run: mvn clean install -DskipTests
 
       - name: Wait for Selenium Hub to be ready
         run: |
@@ -71,7 +74,7 @@ jobs:
           fi
 
       - name: Run Selenium Tests
-        run: mvn test
+        run: mvn clean test -Denvironment=${{ github.event.inputs.environment }}
 
       - name: Load test report history
         uses: actions/checkout@v4

@@ -10,7 +10,7 @@ public class ConfigManager {
   private static final Properties properties = new Properties();
 
   static {
-    String env = System.getProperty("env", "test"); // Default to 'test'
+    String env = System.getProperty("environment", "test"); // Default to 'test'
     try (FileInputStream fis =
         new FileInputStream(
             "src"
