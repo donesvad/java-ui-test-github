@@ -3,6 +3,12 @@
 #docker-compose up
 #To stop the Selenium Grid, run the following command:
 #docker-compose down
+#To scale the Selenium Grid, run the following command:
+#docker-compose up --scale chrome=3 --scale firefox=1
+#To check the status of the Selenium Grid, run the following command:
+#docker-compose ps
+#To check ui of the Selenium Grid, open the following URL in your browser:
+#http://localhost:4444/grid/console
 
 #For CI/CD usage of the Selenium Grid, you can check Services in the GitHub Actions workflow file.
 
@@ -23,6 +29,8 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    deploy:
+      replicas: 3
   firefox:
     image: selenium/node-firefox:latest
     depends_on:
@@ -31,3 +39,5 @@ services:
       - SE_EVENT_BUS_HOST=selenium-hub
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    deploy:
+      replicas: 1
