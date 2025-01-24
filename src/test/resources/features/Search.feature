@@ -9,5 +9,5 @@ Feature: Search
 
     Examples:
       | searchRequest | searchResult     |
-      | gitignore     | github/gitignore |
+      | gitignore     | docker |
       | docker        | jenkinsci/docker |

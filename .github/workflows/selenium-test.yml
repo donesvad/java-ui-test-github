@@ -95,6 +95,13 @@ jobs:
           echo "Running tests in the ${environment} environment"
           mvn clean test -Denvironment=${environment}
 
+      - name: Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: ./logs
+
       - name: Load test report history
         uses: actions/checkout@v4
         if: always()

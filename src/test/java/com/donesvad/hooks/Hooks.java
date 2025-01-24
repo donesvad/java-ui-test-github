@@ -28,6 +28,7 @@ public class Hooks {
       log.info("No remote URL is set, running tests locally");
     }
     WebDriverRunner.addListener(new CustomWebDriverListener());
-    SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+    SelenideLogger.addListener(
+        "AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
   }
 }
