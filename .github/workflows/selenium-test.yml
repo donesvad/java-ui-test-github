@@ -77,7 +77,10 @@ jobs:
           fi
 
       - name: Run Selenium Tests
-        run: mvn clean test -Denvironment=${{inputs.environment}}
+        run: |
+          environment_lowercase=$(echo "${{inputs.environment}}" | tr '[:upper:]' '[:lower:]')
+          echo "Running tests in the ${environment_lowercase} environment"
+          mvn clean test -Denvironment=${environment_lowercase}
 
       - name: Load test report history
         uses: actions/checkout@v4
