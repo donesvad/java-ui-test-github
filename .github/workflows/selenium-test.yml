@@ -115,12 +115,12 @@ jobs:
           echo "Running tests in the '${{ env.environment }}' environment"
           if [ -z "${{ env.tags }}" ]; then
             # No tags specified, run all tests
-            mvn clean test \
+            mvn test \
               -Denvironment=${{ env.environment }}
           else
             # Run only tests matching the tags
             echo "Using tags: '${{ env.tags }}'"
-            mvn clean test \
+            mvn test \
               -Denvironment=${{ env.environment }} \
               -Dcucumber.filter.tags="${{ env.tags }}"
           fi
